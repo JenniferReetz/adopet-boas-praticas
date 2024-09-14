@@ -1,49 +1,41 @@
 package br.com.alura;
 
-import br.com.alura.client.ClientHttpConfiguration;
-import br.com.alura.service.AbrigoService;
-import br.com.alura.service.PetService;
-
+import javax.swing.plaf.synth.SynthButtonUI;
 import java.util.Scanner;
 
 public class AdopetConsoleApplication {
 
     public static void main(String[] args) {
-        ClientHttpConfiguration client =new ClientHttpConfiguration();
-        AbrigoService abrigoService = new AbrigoService(client);
-        PetService petService = new PetService(client);
+        CommandExecute execute = new CommandExecute();
         System.out.println("##### BOAS VINDAS AO SISTEMA ADOPET CONSOLE #####");
         try {
             int opcaoEscolhida = 0;
             while (opcaoEscolhida != 5) {
-                System.out.println("\nDIGITE O NÚMERO DA OPERAÇÃO DESEJADA:");
-                System.out.println("1 -> Listar abrigos cadastrados");
-                System.out.println("2 -> Cadastrar novo abrigo");
-                System.out.println("3 -> Listar pets do abrigo");
-                System.out.println("4 -> Importar pets do abrigo");
-                System.out.println("5 -> Sair");
-
+                exibeMenu();
                 String textoDigitado = new Scanner(System.in).nextLine();
                 opcaoEscolhida = Integer.parseInt(textoDigitado);
-
-                if (opcaoEscolhida == 1) {
-                    abrigoService.listarAbrigo();
-                } else if (opcaoEscolhida == 2) {
-                    abrigoService.cadastrarAbrigo();
-                } else if (opcaoEscolhida == 3) {
-                    petService.listarPetsDoAbrigo();
-                } else if (opcaoEscolhida == 4) {
-                    petService.importarPetsDoAbrig();
-                } else if (opcaoEscolhida == 5) {
-                    break;
-                } else {
-                    System.out.println("NÚMERO INVÁLIDO!");
-                    opcaoEscolhida = 0;
+                switch (opcaoEscolhida){
+                    case 1 -> execute.executeCommand(new ListarAbrigoCommand());
+                    case 2 -> execute.executeCommand(new CadastrarAbrigoCommand());
+                    case 3 -> execute.executeCommand(new ListarPetsDoAbrigoCommand());
+                    case 4 -> execute.executeCommand(new ImportarPetsDoAbrigoCommand());
+                    case 5 -> System.exit(0);
+                    default -> opcaoEscolhida = 0;
                 }
             }
             System.out.println("Finalizando o programa...");
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+    private static void exibeMenu(){
+        System.out.println("""
+                \nDIGITE O NÚMERO DA OPERAÇÃO DESEJADA:
+                1 -> Listar abrigos cadastrados
+                2 -> Cadastrar novo abrigo
+                3 -> Listar pets do abrigo
+                4 -> Importar pets do abrigo
+                5 -> Sair
+                """);
     }
 }
